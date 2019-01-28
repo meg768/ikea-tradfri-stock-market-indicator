@@ -107,7 +107,7 @@ class App {
 
     loop() {
         this.updateIndicators().then(() => {
-            setTimeout(this.loop, 60000 * 5);
+            setTimeout(this.loop.bind(this), 60000 * 5);
         });    
     }
 
