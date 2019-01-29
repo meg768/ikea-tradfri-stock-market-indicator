@@ -89,7 +89,7 @@ module.exports = class StockMarketIndicator extends Indicator {
 
     loop() {
         this.update().then(() => {
-            setTimeout(this.loop.bind(this), 60000 * 3);
+            setTimeout(this.loop.bind(this), 60000 * 5);
         })
         .catch((error) => {
         });
