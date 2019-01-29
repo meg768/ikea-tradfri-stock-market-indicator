@@ -1,10 +1,3 @@
-#!/usr/bin/env node
-
-var sprintf      = require('yow/sprintf');
-var isArray      = require('yow/is').isArray;
-var isString     = require('yow/is').isString;
-var isDate       = require('yow/is').isDate;
-var isInteger    = require('yow/is').isInteger;
 var Ikea         = require('node-tradfri-client');
 var ColorConvert = require('color-convert');
 
@@ -51,11 +44,7 @@ module.exports = class Gateway {
     }
 
 
-    disconnect() {
-        this.log('Disconnecting...');
-        this.gateway.stopObservingDevices();
-        this.gateway.destroy();
-    }
+
 
     connect() {
         return new Promise((resolve, reject) => {
@@ -86,9 +75,13 @@ module.exports = class Gateway {
         });
     }
 
+    disconnect() {
+        this.log('Disconnecting...');
+        this.gateway.stopObservingDevices();
+        this.gateway.destroy();
+    }
 
-
-    setLight(device, options) {
+    operateLight(device, options) {
 
         if (typeof device == 'string')
             device = this.devices[device];
@@ -108,19 +101,6 @@ module.exports = class Gateway {
 
         return this.gateway.operateLight(device, params);
     }
-
-    setBrightness(device, brightness) {
-
-        if (device == undefined)
-            throw new Error('Device not found.');
-
-        return this.gateway.operateLight(device, {
-            brightness: brightness,
-            transitionTime: 0.5
-        });
-    }    
-
-    
 
 
 
