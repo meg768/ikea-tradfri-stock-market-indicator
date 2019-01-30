@@ -20,8 +20,6 @@ module.exports = class StockMarketIndicator extends Indicator {
                 options.symbol = symbol;
                 options.modules = ['price', 'summaryProfile', 'summaryDetail'];
   
-                this.log(sprintf('Fetching quote from Yahoo for symbol %s.', symbol));
-    
                 yahoo.quote(options).then((data) => {
                     var quote = {};
                     quote.symbol = symbol;
@@ -62,6 +60,10 @@ module.exports = class StockMarketIndicator extends Indicator {
 
             try {
                 this.fetch(this.config.symbol).then((quote) => {
+
+
+                    this.log(sprintf('Fetched quote from Yahoo for symbol %s (%s%.2f%%).', quote.symbol, quote.change >= 0 ? '+' : '-', parseFloat(quote.change)));
+    
 
                     function interpolate(a, b, factor) {
                         var color = {};
