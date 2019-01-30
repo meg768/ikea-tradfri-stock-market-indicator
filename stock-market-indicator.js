@@ -117,7 +117,8 @@ module.exports = class StockMarketIndicator extends Indicator {
     }
 
     loop() {
-        var updateInterval = 60000 * 0.25;
+        // Get update interval from config, default 5 minutes
+        var updateInterval = (parseFloat(this.config.updateInterval) || 5) * 60000;
 
         this.update().then(() => {
             setTimeout(this.loop.bind(this), updateInterval);
