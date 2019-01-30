@@ -1,7 +1,6 @@
 {
 	"indicators": [
-        {"symbol": "^OMX", "lightbulb": "Sovrummet Bollen"},
-        {"symbol": "GC=F", "lightbulb": "Sovrummet Slingan"}
+        {"symbol": "^OMX", "lightbulb": "Sovrummet Bollen"}
     
     ]
 }

@@ -1,11 +1,14 @@
 var Indicator  = require('./indicator.js');
 var yahoo      = require('yahoo-finance');
 var sprintf    = require('yow/sprintf');
+var isDate     = require('yow/is').isDate;
 
 module.exports = class StockMarketIndicator extends Indicator {
 
     constructor(log, gateway, config) {
         super(log, gateway, config);
+
+        this.lastQuote = undefined;
     }
 
 
@@ -17,24 +20,24 @@ module.exports = class StockMarketIndicator extends Indicator {
                 options.symbol = symbol;
                 options.modules = ['price', 'summaryProfile', 'summaryDetail'];
   
-                this.log(sprintf('Fetching summary profile from Yahoo for symbol %s.', symbol));
+                this.log(sprintf('Fetching quote from Yahoo for symbol %s.', symbol));
     
                 yahoo.quote(options).then((data) => {
-
-                    var stock = {};
-                    stock.symbol = symbol;
-                    stock.name = data.price.longName ? data.price.longName : data.price.shortName;
-                    stock.sector = data.summaryProfile ? data.summaryProfile.sector : 'n/a';
-                    stock.industry = data.summaryProfile ? data.summaryProfile.industry : 'n/a';
-                    stock.exchange = data.price.exchangeName;
-                    stock.type = data.price.quoteType.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
-                    stock.change = data.price.regularMarketChangePercent * 100;
-                    stock.date = data.price.regularMarketTime;
+                    var quote = {};
+                    quote.symbol = symbol;
+                    quote.name = data.price.longName ? data.price.longName : data.price.shortName;
+                    quote.sector = data.summaryProfile ? data.summaryProfile.sector : 'n/a';
+                    quote.industry = data.summaryProfile ? data.summaryProfile.industry : 'n/a';
+                    quote.exchange = data.price.exchangeName;
+                    quote.type = data.price.quoteType.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+                    quote.change = data.price.regularMarketChangePercent * 100;
+                    quote.time = data.price.regularMarketTime;
+                    quote.price = data.price.regularMarketPrice;
 
                     // Fix some stuff
-                    stock.name = stock.name.replace(/&amp;/g, '&');
+                    quote.name = quote.name.replace(/&amp;/g, '&');
     
-                    resolve(stock);
+                    resolve(quote);
     
                 })
                 .catch((error) => {
@@ -49,49 +52,79 @@ module.exports = class StockMarketIndicator extends Indicator {
 		})
 	}
 
+    computeColor(percentChange) {
+
+        
+    }
 
     update() {
         return new Promise((resolve, reject) => {
 
             try {
-                this.fetch(this.config.symbol).then((stock) => {
+                this.fetch(this.config.symbol).then((quote) => {
 
-                    this.log('Quote', JSON.stringify(stock));
-    
-                    if (stock.change == undefined)
-                        return Promise.resolve();
+                    function interpolate(a, b, factor) {
+                        var color = {};
+                        color.red   = (1 - factor) * a.red + factor * b.red;
+                        color.green = (1 - factor) * a.green + factor * b.green;
+                        color.blue  = (1 - factor) * a.blue + factor * b.blue;
+                        return color;
+                    }
 
-                    var options = {};
-            
-                    options.hue        = stock.change > 0 ? 120 : 0;
-                    options.saturation = 100;
-                    options.luminance  = 100 - (Math.min(1, Math.abs(stock.change)) * 100) / 2;
-            
-                    this.log('Setting light to', JSON.stringify(options));
+                    if (false) {
+                        this.log('Quote     ', JSON.stringify(quote));
+                        this.log('Last Quote', JSON.stringify(this.lastQuote));    
+                    }
     
-                    return this.indicate(options);
+                    var white      = {red:255, green:204, blue:159};
+                    var yellow     = {red:255, green:255, blue:0};
+                    var red        = {red:255, green:0, blue:0};
+                    var green      = {red:0, green:255, blue:0};
+                    var factor     = Math.min(1, Math.abs(quote.change));
+                    var color      = interpolate(white, quote.change > 0 ? green : red, factor);
+
+                    // Set to blue when market closed...
+                    if (this.lastQuote && quote.time) {
+                        if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
+                            color = {red:0, green:0, blue:255};
+                        }
+    
+                    }
+
+                    if (false) {
+                        color.hue        = quote.change > 0 ? 120 : 0;
+                        color.saturation = 100;
+                        color.luminance  = 100 - (Math.min(1, Math.abs(quote.change)) * 100) / 2;
+
+                    }
+            
+                    this.lastQuote = quote;
+
+                    return this.indicate(color);
                 })
                 .then(() => {
                     resolve();
                 })
                 .catch((error) => {
-                    this.log('NO!');
                     reject(error);
                 })
     
             }
             catch (error) {
-                this.log('asfgsfg');
                 reject(error);
             }
         });
     }
 
     loop() {
+        var updateInterval = 60000 * 0.25;
+
         this.update().then(() => {
-            setTimeout(this.loop.bind(this), 60000 * 5);
+            setTimeout(this.loop.bind(this), updateInterval);
         })
         .catch((error) => {
+            this.log(error.stack);
+            setTimeout(this.loop.bind(this), updateInterval);
         });
 
     }
@@ -99,7 +132,7 @@ module.exports = class StockMarketIndicator extends Indicator {
     start() {
         
         return new Promise((resolve, reject) => {
-            this.update().then(() => {
+            Promise.resolve().then(() => {
                 this.loop();
                 resolve();
             })

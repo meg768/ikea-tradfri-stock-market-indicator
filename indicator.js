@@ -9,8 +9,9 @@ module.exports = class Indicator {
 
     }
 
-    indicate(options) {
-        return this.gateway.operateLight(this.config.lightbulb, options);    
+    indicate(color) {
+        this.log('Setting light to', JSON.stringify(color));
+        return this.gateway.operateLight(this.config.lightbulb, color);    
     }
 
     update() {

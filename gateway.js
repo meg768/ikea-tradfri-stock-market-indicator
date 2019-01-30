@@ -93,6 +93,9 @@ module.exports = class Gateway {
 
         params.transitionTime = 0.5;
 
+        if (options.red != undefined && options.green != undefined && options.blue != undefined)
+            params.color = ColorConvert.rgb.hex(options.red, options.green, options.blue);
+
         if (options.hue != undefined)
             params.color = ColorConvert.hsl.hex(options.hue, options.saturation != undefined ? 100 : options.saturation, options.luminance != undefined ?  options.luminance : 50) ;
 
