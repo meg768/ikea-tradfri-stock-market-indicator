@@ -118,8 +118,6 @@ this.log('CHANGE', change);
                         return color;
                     }
 
-                    quote.change = 1;
-
                     if (false) {
                         this.log('Quote     ', JSON.stringify(quote));
                         this.log('Last Quote', JSON.stringify(this.lastQuote));    
