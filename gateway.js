@@ -81,7 +81,7 @@ module.exports = class Gateway {
         this.gateway.destroy();
     }
 
-    operateLight(device, options) {
+    operateLight(device, color) {
 
         if (typeof device == 'string')
             device = this.devices[device];
@@ -92,15 +92,24 @@ module.exports = class Gateway {
         var params = {};
 
         params.transitionTime = 0.5;
+        console.log(JSON.stringify(color));
 
-        if (options.red != undefined && options.green != undefined && options.blue != undefined)
-            params.color = ColorConvert.rgb.hex(options.red, options.green, options.blue);
+        if (color.red != undefined && color.green != undefined && color.blue != undefined) {
+            var hsv = ColorConvert.rgb.hsv(color.red, color.green, color.blue);
+            console.log(JSON.stringify(hsv));
+            params.color  = ColorConvert.rgb.hex(color.red, color.green, color.blue);
+            params.dimmer = hsv[2];
+        }
+        else if (color.hue != undefined && color.saturation != undefined && color.luminance != undefined) {
+            var hsv = ColorConvert.hsl.hsv(color.hue, color.saturation, color.luminance);
+            params.color  = ColorConvert.hsl.hex(color.hue, color.saturation, color.luminance);
+            params.dimmer = hsv[2];
+        }
+        else {
+            throw new Error('Invalid color value specified.');
+        }
 
-        if (options.hue != undefined)
-            params.color = ColorConvert.hsl.hex(options.hue, options.saturation != undefined ? 100 : options.saturation, options.luminance != undefined ?  options.luminance : 50) ;
-
-        if (options.brightness != undefined)
-            params.dimmer = options.brightness;
+        console.log(JSON.stringify(params));
 
         return this.gateway.operateLight(device, params);
     }
