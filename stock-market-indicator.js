@@ -133,7 +133,7 @@ this.log('CHANGE', change);
                     // Set to blue when market closed...
                     if (this.lastQuote && quote.time) {
                         if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
-                            color = {red:0, green:0, blue:10};
+                            color = {red:0, green:0, blue:3};
                         }
                     }
 
