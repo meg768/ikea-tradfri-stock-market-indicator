@@ -50,9 +50,28 @@ module.exports = class StockMarketIndicator extends Indicator {
 		})
 	}
 
+    computeColorX(quote) {
+
+        function interpolate(a, b, factor) {
+            var color = {};
+            color.red   = (1 - factor) * a.red + factor * b.red;
+            color.green = (1 - factor) * a.green + factor * b.green;
+            color.blue  = (1 - factor) * a.blue + factor * b.blue;
+            return color;
+        }
+
+        var white      = {red:255, green:204, blue:159};
+        var yellow     = {red:255, green:255, blue:0};
+        var red        = {red:50, green:0, blue:0};
+        var green      = {red:0, green:255, blue:0};
+        var factor     = Math.min(1, Math.abs(quote.change));
+        var color      = interpolate(white, quote.change > 0 ? green : red, factor);
+
+        return color;
+    }
+
     computeColor(quote) {
 
-        var marketClosed = {red:0, green:0, blue:10};
         var neutral = {red:209, green:202, blue:245};
 
         var baisse = [
@@ -81,22 +100,12 @@ module.exports = class StockMarketIndicator extends Indicator {
             {red:  0, green:255, blue:  0}
         ];
 
-        var change = Math.max(Math.min(quote.change, 0.9), -0.9);
-this.log('CHANGE', change);
-        // Set to blue when market closed...
-        if (this.lastQuote && quote.time) {
-            if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
-                return marketClosed;
-            }
-        } 
+        var array  = quote.change > 0 ? hausse : baisse;
+        var change = Math.min(Math.abs(quote.change), 1);
+        var index  = Math.min(Math.floor(change * array.length), array.length - 1);
 
-        if (change > 0) 
-            return hausse[Math.floor(change * 10)];
-
-        if (change < 0)
-            return baisse[Math.floor(Math.abs(change) * 10)];
-
-        return neutral;
+        return change == 0 ? neutral : array[index];
+ 
     }
 
 
@@ -106,29 +115,9 @@ this.log('CHANGE', change);
             try {
                 this.fetch(this.config.symbol).then((quote) => {
 
-
                     this.log(sprintf('Fetched quote from Yahoo for symbol %s (%s%.2f%%).', quote.symbol, quote.change >= 0 ? '+' : '-', parseFloat(quote.change)));
     
-
-                    function interpolate(a, b, factor) {
-                        var color = {};
-                        color.red   = (1 - factor) * a.red + factor * b.red;
-                        color.green = (1 - factor) * a.green + factor * b.green;
-                        color.blue  = (1 - factor) * a.blue + factor * b.blue;
-                        return color;
-                    }
-
-                    if (false) {
-                        this.log('Quote     ', JSON.stringify(quote));
-                        this.log('Last Quote', JSON.stringify(this.lastQuote));    
-                    }
-    
-                    var white      = {red:255, green:204, blue:159};
-                    var yellow     = {red:255, green:255, blue:0};
-                    var red        = {red:50, green:0, blue:0};
-                    var green      = {red:0, green:255, blue:0};
-                    var factor     = Math.min(1, Math.abs(quote.change));
-                    var color      = interpolate(white, quote.change > 0 ? green : red, factor);
+                    var color = this.computeColor(quote);
 
                     // Set to blue when market closed...
                     if (this.lastQuote && quote.time) {
@@ -176,24 +165,33 @@ this.log('CHANGE', change);
 
     }
 
-    startY() {
-
+    test() {
+        return Promise.resolve();
         return new Promise((resolve, reject) => {
-            var promise = Promise.resolve();
-            var quote = {change:-1.1};
-    
-            for (var i = 0; i < 22; i++) {
-                promise = promise.then(() => {
-                    setTimeout(() => {
-                        var color = this.computeColor(quote);
-                        quote.change += 0.1;
-                        console.log('*******************', quote, color)
-                            return this.indicate(color);
 
-                    }, 1000)
+
+            var delay = (ms) => {
+                return new Promise((resolve, reject) => {
+                    setTimeout(resolve, 1000);
                 });
-            }
+            };
+
+            var promise = Promise.resolve();
+            var quote = {change:-1.2};
     
+            for (var i = 0; i < 25; i++) {
+
+                promise = promise.then(() => {
+                    var color = this.computeColor(quote);
+                    quote.change += 0.1;
+                    console.log('*******************', quote, color)
+                    return this.indicate(color);
+                })
+                .then(() => {                    
+                    return delay(2000);
+                });
+
+            }
             promise.then(() => {
                 resolve();
             })
@@ -206,7 +204,7 @@ this.log('CHANGE', change);
 
     start() {
         return new Promise((resolve, reject) => {
-            Promise.resolve().then(() => {
+            this.test().then(() => {
                 this.loop();
                 resolve();
             })

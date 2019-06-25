@@ -91,12 +91,11 @@ module.exports = class Gateway {
 
         var params = {};
 
-        params.transitionTime = 0.5;
+        params.transitionTime = 0;
         console.log(JSON.stringify(color));
 
         if (color.red != undefined && color.green != undefined && color.blue != undefined) {
             var hsv = ColorConvert.rgb.hsv(color.red, color.green, color.blue);
-            console.log(JSON.stringify(hsv));
             params.color  = ColorConvert.rgb.hex(color.red, color.green, color.blue);
             params.dimmer = hsv[2];
         }
@@ -108,8 +107,6 @@ module.exports = class Gateway {
         else {
             throw new Error('Invalid color value specified.');
         }
-
-        console.log(JSON.stringify(params));
 
         return this.gateway.operateLight(device, params);
     }

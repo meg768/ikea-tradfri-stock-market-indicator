@@ -1,6 +1,6 @@
 {
 	"indicators": [
-        {"symbol": "^OMX", "lightbulb": "Sovrummet Bollen", "updateInterval": 3}
+        {"symbol": "^OMX", "lightbulb": "Sovrummet Bollen", "updateInterval": 0.2}
     
     ]
 }
