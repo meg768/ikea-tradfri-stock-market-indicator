@@ -1,4 +1,4 @@
-var Ikea         = require('node-tradfri-client');
+var Ikea = require('node-tradfri-client');
 var ColorConvert = require('color-convert');
 
 module.exports = class Gateway {
@@ -6,51 +6,57 @@ module.exports = class Gateway {
     constructor(log) {
 
         this.gateway = null;
-        this.config = {};
         this.log = log;
-
-        if (process.env.IKEA_TRADFRI_SECURITY_CODE)
-            this.config.securityCode = process.env.IKEA_TRADFRI_SECURITY_CODE;
-
-        if (process.env.IKEA_TRADFRI_HOST)
-            this.config.host = process.env.IKEA_TRADFRI_HOST;
-
-        if (this.config.host == undefined)
-            throw new Error('Must specify a host in .env');
-
-        if (this.config.securityCode == undefined)
-            throw new Error('The security code from the back of the IKEA gateway must be specified in .env.')
-
-        this.gateway = new Ikea.TradfriClient(this.config.host);
         this.devices = {};
 
-        this.gateway.on('device updated', (device) => {
-            this.deviceUpdated(device);
-        });
-
-        this.gateway.on('device removed', (device) => {
-            this.deviceRemoved(device);
-        });
+        if (process.env.IKEA_TRADFRI_SECURITY_CODE == undefined)
+            throw new Error('The security code from the back of the IKEA gateway must be specified in .env.');
 
     }
 
-    deviceUpdated(device) {
-        delete this.devices[device.name];
-        this.devices[device.name] = device;
+    getHostName() {
+        return new Promise((resolve, reject) => {
+
+            if (process.env.IKEA_TRADFRI_HOST != undefined)
+                resolve(process.env.IKEA_TRADFRI_HOST);
+            else {
+                this.log('Discovering gateway...');
+
+                Ikea.discoverGateway().then((discovery) => {
+                    this.log('Discovered host "%s"', discovery.name);
+                    resolve(discovery.name);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+            }
+        });        
     }
-
-    deviceRemoved(device) {
-        delete this.devices[device.name];
-    }
-
-
-
 
     connect() {
         return new Promise((resolve, reject) => {
 
             Promise.resolve().then(() => {
-                return this.gateway.authenticate(this.config.securityCode);
+                return this.getHostName();
+            })
+
+            .then((host) => {
+                this.gateway = new Ikea.TradfriClient(host);
+
+                this.gateway.on('device updated', (device) => {
+                    delete this.devices[device.name];
+                    this.devices[device.name] = device;
+                });
+        
+                this.gateway.on('device removed', (device) => {
+                    delete this.devices[device.name];
+                });
+
+                return Promise.resolve();
+            })
+
+            .then(() => {
+                return this.gateway.authenticate(process.env.IKEA_TRADFRI_SECURITY_CODE);
             })
             .then((credentials) => {
                 return this.gateway.connect(credentials.identity, credentials.psk);
@@ -67,6 +73,7 @@ module.exports = class Gateway {
             })
             .then(() => {
                 this.log('Connected.');
+        
                 resolve();
             })
             .catch((error) => {
@@ -77,8 +84,11 @@ module.exports = class Gateway {
 
     disconnect() {
         this.log('Disconnecting...');
-        this.gateway.stopObservingDevices();
-        this.gateway.destroy();
+        if (this.gateway) {
+            this.gateway.stopObservingDevices();
+            this.gateway.destroy();
+    
+        }
     }
 
     operateLight(device, color) {

@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-		"commit": "git add -A && git commit -m '-' && git push",
-		"goto-github": "open https://github.com/meg768/ikea-tradfri-stock-market-indicator",
-
+    "git-commit": "git add -A && git commit -m '-' && git push",
+    "goto-github": "open https://github.com/meg768/ikea-tradfri-stock-market-indicator",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +21,7 @@
   "dependencies": {
     "color-convert": "^1.9.3",
     "dotenv": "^6.2.0",
-    "node-tradfri-client": "^1.5.0",
+    "node-tradfri-client": "^1.6.0",
     "yahoo-finance": "^0.3.6",
     "yow": "^1.0.104"
   }
