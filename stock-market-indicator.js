@@ -119,6 +119,7 @@ module.exports = class StockMarketIndicator extends Indicator {
         return new Promise((resolve, reject) => {
 
             try {
+
                 this.fetch(this.config.symbol).then((quote) => {
 
                     this.log(sprintf('Fetched quote from Yahoo for symbol %s (%s%.2f%%).', quote.symbol, quote.change >= 0 ? '+' : '-', parseFloat(quote.change)));
@@ -138,7 +139,17 @@ module.exports = class StockMarketIndicator extends Indicator {
                     
                     this.lastQuote = quote;
 
-                    return this.indicate(color);
+                    return color;
+                })
+                .then((color) => {
+                    var now = new Date();
+                    var hour = now.getHours();
+
+                    if (hour >= 9 && hour <= 21)
+                        this.indicate(color);
+                    else
+                        this.indicate({red:255, green:0, blue:0});
+
                 })
                 .then(() => {
                     resolve();
