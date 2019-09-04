@@ -21,7 +21,7 @@ module.exports = class App {
         this.config = config;
 
         console.log('CONFIG', JSON.stringify(this.config));
-        this.gateway = new Gateway({log:this.log});
+        this.gateway = new Gateway({log:console});
 
 
 
