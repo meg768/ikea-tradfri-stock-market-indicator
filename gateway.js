@@ -8,6 +8,10 @@ module.exports = class Gateway {
 
         var {log} = args;
 
+        if (!log) {
+            throw new Error('A log function must be specified.');
+        }
+
         this.gateway = null;
         this.log = log;
         this.devices = {};
