@@ -16,6 +16,8 @@ module.exports = class App {
             throw new Error('No configuration file!');
         }
 
+        console.log('DEBUG MODE', this.config.debug);
+
         this.gateway = new Gateway({log:this.log});
         this.indicators = [];
 
