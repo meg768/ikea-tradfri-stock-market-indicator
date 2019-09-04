@@ -20,7 +20,7 @@ module.exports = class App {
         this.configFile = configFile;
         this.config = config;
 
-        this.log = () => {
+        this.Xlog = () => {
             if (this.config.debug)
                 console.log.apply(this, arguments);
     
@@ -30,7 +30,7 @@ module.exports = class App {
     }
 
     log() {
-        if (this.config.debug)
+        if (this.config && this.config.debug)
             console.log.apply(this, arguments);
     }
 
