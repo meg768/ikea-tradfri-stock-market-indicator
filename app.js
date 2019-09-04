@@ -14,6 +14,10 @@ module.exports = class App {
         this.config = JSON.parse(fs.readFileSync(this.configFile));
         this.indicators = [];
 
+        if (this.config == undefined) {
+            throw new Error('No configuration file!');
+        }
+
     }
 
     log() {
