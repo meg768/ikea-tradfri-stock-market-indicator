@@ -167,7 +167,7 @@ module.exports = class StockMarketIndicator extends Indicator {
     start() {
         return new Promise((resolve, reject) => {
             this.update().then(() => {
-                return this.delay(5000);
+                return this.delay(2000);
             })
             .then(() => {
                 this.loop();
