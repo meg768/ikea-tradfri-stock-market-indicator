@@ -20,6 +20,7 @@ module.exports = class App {
         this.configFile = configFile;
         this.config = config;
 
+        console.log('CONFIG', JSON.stringify(this.config));
         this.gateway = new Gateway({log:this.log});
 
 
