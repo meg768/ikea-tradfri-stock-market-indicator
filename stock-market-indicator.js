@@ -126,7 +126,7 @@ module.exports = class StockMarketIndicator extends Indicator {
                         }
                     }
 
-                    if (false) {
+                    if (true) {
                         color.hue        = quote.change > 0 ? 120 : 0;
                         color.saturation = 100;
                         color.luminance  = 100 - (Math.min(1, Math.abs(quote.change)) * 100) / 2;

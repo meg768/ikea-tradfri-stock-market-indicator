@@ -17,7 +17,8 @@ module.exports = class App {
     }
 
     log() {
-        console.log.apply(this, arguments);
+        if (this.config.debug)
+            console.log.apply(this, arguments);
     }
 
     run() {

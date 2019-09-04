@@ -1,4 +1,6 @@
 {
+    "debug": true,
+    
 	"indicators": [
         {"symbol": "^OMX", "lightbulb": "Bollen A", "updateInterval": 0.2},
         {"symbol": "^SPGSGC", "lightbulb": "Bollen B", "updateInterval": 0.2},    
