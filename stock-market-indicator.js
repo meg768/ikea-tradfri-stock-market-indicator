@@ -94,7 +94,7 @@ module.exports = class StockMarketIndicator extends Indicator {
                     var hour = now.getHours();
 
                     if (hour >= 9 && hour <= 22)
-                        return Color(color).darken(0.5);
+                        return color;
                     else
                         return ({hue:0, saturation:0, luminance:0});
 
