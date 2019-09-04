@@ -20,14 +20,20 @@ module.exports = class App {
         this.configFile = configFile;
         this.config = config;
 
+        this.log = () => {
+            console.log('*************', JSON.stringify(this));
+            if (this.config.debug)
+                console.log.apply(this, arguments);
+    
+        }
         console.log('CONFIG', JSON.stringify(this.config));
-        this.gateway = new Gateway({log:console.log});
+        this.gateway = new Gateway({log:this.log});
 
 
 
     }
 
-    log() {
+    xxxlog() {
         console.log('*************', JSON.stringify(this));
         if (this.config.debug)
             console.log.apply(this, arguments);
