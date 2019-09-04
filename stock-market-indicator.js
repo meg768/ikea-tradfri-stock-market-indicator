@@ -58,6 +58,11 @@ module.exports = class StockMarketIndicator extends Indicator {
         return {hue:hue, saturation:saturation, luminance:luminance}
     }
 
+    delay(ms) {
+        return new Promise((resolve, reject) => {
+            setTimeout(resolve, ms);
+        });
+    }
     update() {
         return new Promise((resolve, reject) => {
 
@@ -162,6 +167,9 @@ module.exports = class StockMarketIndicator extends Indicator {
     start() {
         return new Promise((resolve, reject) => {
             this.update().then(() => {
+                return this.delay(2000);
+            })
+            .then(() => {
                 this.loop();
                 resolve();
             })
