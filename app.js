@@ -25,12 +25,14 @@ module.exports = class App {
                 console.log.apply(this, arguments);
     
         }
+
         this.gateway = new Gateway({log:this.log});
-
-
-
     }
 
+    log() {
+        if (this.config.debug)
+            console.log.apply(this, arguments);
+    }
 
     run() {
 		return new Promise((resolve, reject) => {
