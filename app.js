@@ -12,7 +12,7 @@ module.exports = class App {
         this.configFile = Path.join(Path.dirname(__filename), 'config.json');
         this.config = JSON.parse(fs.readFileSync(this.configFile));
 
-        if (this.config == undefined) {
+        if (!this.config) {
             throw new Error('No configuration file!');
         }
 
@@ -20,7 +20,7 @@ module.exports = class App {
 
         this.gateway = new Gateway({log:this.log});
 
-        if (this.gateway == undefined) {
+        if (!this.gateway) {
             throw new Error('Could not create gateway!');
 
         }
