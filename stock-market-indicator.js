@@ -148,7 +148,7 @@ module.exports = class StockMarketIndicator extends Indicator {
                     if (hour >= 9 && hour < 21)
                         this.indicate(color);
                     else
-                        this.indicate({hue:0, saturation:100, luminance:1});
+                        this.indicate({hue:0, saturation:100, luminance:10});
 
                 })
                 .then(() => {
