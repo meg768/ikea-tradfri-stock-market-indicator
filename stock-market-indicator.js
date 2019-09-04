@@ -72,7 +72,7 @@ module.exports = class StockMarketIndicator extends Indicator {
                     // Set to blue when market closed...
                     if (this.lastQuote && quote.time) {
                         if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
-                            color = {red:0, green:0, blue:1};
+                            color = {red:0, green:0, blue:5};
                         }
                     }
                     
