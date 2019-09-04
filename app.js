@@ -19,6 +19,11 @@ module.exports = class App {
         console.log('DEBUG MODE', this.config.debug);
 
         this.gateway = new Gateway({log:this.log});
+
+        if (this.gateway == undefined) {
+            throw new Error('Could not create gateway!');
+
+        }
         this.indicators = [];
 
 
@@ -57,7 +62,7 @@ module.exports = class App {
                 resolve();
             })
             .catch((error) => {
-                this.gateway.disconnect();                
+                this.gateway.disconnect();        
                 reject(error);
             });
         });
