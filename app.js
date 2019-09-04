@@ -20,17 +20,11 @@ module.exports = class App {
         this.configFile = configFile;
         this.config = config;
 
-        this.Xlog = () => {
-            if (this.config.debug)
-                console.log.apply(this, arguments);
-    
-        }
-
         this.gateway = new Gateway({log:this.log});
     }
 
     log() {
-//        if (this.config && this.config.debug)
+        if (this.config && this.config.debug)
             console.log.apply(this, arguments);
     }
 
