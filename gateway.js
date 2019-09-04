@@ -84,6 +84,7 @@ module.exports = class Gateway {
 
     disconnect() {
         this.log('Disconnecting...');
+        
         if (this.gateway) {
             this.gateway.stopObservingDevices();
             this.gateway.destroy();

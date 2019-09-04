@@ -1,7 +1,7 @@
 {
 	"indicators": [
-        {"symbol": "^OMX", "lightbulb": "Sovrummet Bollen", "updateInterval": 0.2}
-    
+        {"symbol": "^OMX", "lightbulb": "Bollen A", "updateInterval": 0.2},
+        {"symbol": "^SPGSGC", "lightbulb": "Bollen B", "updateInterval": 0.2}    
     ]
 }
 
