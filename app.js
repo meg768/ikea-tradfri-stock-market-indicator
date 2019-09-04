@@ -26,7 +26,7 @@ module.exports = class App {
 
     }
 
-    logX() {
+    log() {
         console.log('*************', JSON.stringify(this));
         if (this.config.debug)
             console.log.apply(this, arguments);
