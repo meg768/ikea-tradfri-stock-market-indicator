@@ -107,13 +107,12 @@ module.exports = class StockMarketIndicator extends Indicator {
     }
 
     computeColorHSL(quote) {
-        var color = {};
+        var change     = Math.max(-2, Math.min(2, quote.change * 100));
+        var hue        = change >= 0 ? 120 : 0;
+        var saturation = 100;
+        var luminance  = 20 + (Math.abs(change) / 2) * 30;
 
-        color.hue        = quote.change > 0 ? 120 : 0;
-        color.saturation = 100;
-        color.luminance  = 100 - (Math.min(1, Math.abs(quote.change)) * 100) / 2;
-
-        return color;
+        return {hue:hue, saturation:saturation, luminance:luminance}
     }
 
     update() {
