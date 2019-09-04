@@ -126,7 +126,7 @@ module.exports = class StockMarketIndicator extends Indicator {
     
                     var color = this.computeColorRGB(quote);
 
-                    if (true) {
+                    if (false) {
                         color = this.computeColorHSL(quote);
                     }
 
