@@ -68,7 +68,7 @@ module.exports = class StockMarketIndicator extends Indicator {
         return color;
     }
 
-    computeColor(quote) {
+    computeColorRGB(quote) {
 
         var neutral = {red:209, green:202, blue:245};
 
@@ -106,6 +106,21 @@ module.exports = class StockMarketIndicator extends Indicator {
  
     }
 
+    computeColorHSL(quote) {
+        var color = {};
+
+        color.hue        = quote.change > 0 ? 120 : 0;
+        color.saturation = 100;
+        color.luminance  = 100 - (Math.min(1, Math.abs(quote.change)) * 100) / 2;
+
+        if (this.lastQuote && quote.time) {
+            if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
+                color = {hue:120, saturation:100, luminance:10};
+            }
+        }
+
+        return color;
+    }
 
     update() {
         return new Promise((resolve, reject) => {
@@ -115,29 +130,19 @@ module.exports = class StockMarketIndicator extends Indicator {
 
                     this.log(sprintf('Fetched quote from Yahoo for symbol %s (%s%.2f%%).', quote.symbol, quote.change >= 0 ? '+' : '-', parseFloat(quote.change)));
     
-                    var color = this.computeColor(quote);
+                    var color = this.computeColorRGB(quote);
+
+                    if (true) {
+                        color = this.computeColorHSL(quote);
+                    }
 
                     // Set to blue when market closed...
                     if (this.lastQuote && quote.time) {
                         if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
-                            color = {red:0, green:0, blue:3};
+                            color = {red:0, green:0, blue:5};
                         }
                     }
-
-                    if (true) {
-                        color = {};
-                        color.hue        = quote.change > 0 ? 120 : 0;
-                        color.saturation = 100;
-                        color.luminance  = 100 - (Math.min(1, Math.abs(quote.change)) * 100) / 2;
-
-                        if (this.lastQuote && quote.time) {
-                            if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
-                                color = {hue:120, saturation:100, luminance:10};
-                            }
-                        }
-    
-                    }
-            
+                    
                     this.lastQuote = quote;
 
                     return this.indicate(color);
