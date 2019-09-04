@@ -89,7 +89,6 @@ module.exports = class StockMarketIndicator extends Indicator {
                     return color;
                 })
                 .then((color) => {
-                    return color;
                     var now = new Date();
                     var hour = now.getHours();
 
