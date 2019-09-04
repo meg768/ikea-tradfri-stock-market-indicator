@@ -113,12 +113,6 @@ module.exports = class StockMarketIndicator extends Indicator {
         color.saturation = 100;
         color.luminance  = 100 - (Math.min(1, Math.abs(quote.change)) * 100) / 2;
 
-        if (this.lastQuote && quote.time) {
-            if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
-                color = {hue:120, saturation:100, luminance:10};
-            }
-        }
-
         return color;
     }
 
