@@ -107,8 +107,6 @@ module.exports = class Gateway {
         if (device == undefined)
             throw new Error('Device not found.');
 
-        this.log('Original color %s', JSON.stringify(color));
-
         if (color.red != undefined && color.green != undefined && color.blue != undefined) {
             color = Color.rgb(color.red, color.green, color.blue);
         }
@@ -119,10 +117,7 @@ module.exports = class Gateway {
             throw new Error('Invalid color value specified.');
         }
 
-        this.log('Modified color %s', JSON.stringify(color));
-    
         color = color.hsl().array();
-        this.log('Modified color again %s', JSON.stringify(color));
 
         var params = {};
         params.transitionTime = 0;
