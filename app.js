@@ -30,7 +30,7 @@ module.exports = class App {
     }
 
     log() {
-        console.log('*************', this.config);
+        console.log('*************', JSON.stringify(this));
         if (this.config.debug)
             console.log.apply(this, arguments);
     }
