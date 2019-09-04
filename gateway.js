@@ -1,5 +1,6 @@
 var Ikea = require('node-tradfri-client');
 var ColorConvert = require('color-convert');
+var Color = require('color');
 
 module.exports = class Gateway {
 
@@ -84,7 +85,7 @@ module.exports = class Gateway {
 
     disconnect() {
         this.log('Disconnecting...');
-        
+
         if (this.gateway) {
             this.gateway.stopObservingDevices();
             this.gateway.destroy();
@@ -100,25 +101,30 @@ module.exports = class Gateway {
         if (device == undefined)
             throw new Error('Device not found.');
 
-        var params = {};
-
-        params.transitionTime = 0;
-        console.log(JSON.stringify(color));
+        this.log('Original color %s', JSON.stringify(color));
 
         if (color.red != undefined && color.green != undefined && color.blue != undefined) {
-            var hsv = ColorConvert.rgb.hsv(color.red, color.green, color.blue);
-            params.color  = ColorConvert.rgb.hex(color.red, color.green, color.blue);
-            params.dimmer = hsv[2];
+            color = Color.rgb(color.red, color.green, color.blue);
         }
         else if (color.hue != undefined && color.saturation != undefined && color.luminance != undefined) {
-            var hsv = ColorConvert.hsl.hsv(color.hue, color.saturation, color.luminance);
-            params.color  = ColorConvert.hsl.hex(color.hue, color.saturation, color.luminance);
-            params.dimmer = hsv[2];
+            color = Color.hsl(color.hue, color.saturation, color.luminance);
         }
         else {
             throw new Error('Invalid color value specified.');
         }
 
+        this.log('Modified color %s', JSON.stringify(color));
+    
+        color = color.hsl().array();
+        this.log('Modified color again %s', JSON.stringify(color));
+
+        var params = {};
+        params.transitionTime = 0;
+        params.hue = color[0];
+        params.saturation = color[1];
+        params.dimmer = color[2];
+
+    
         return this.gateway.operateLight(device, params);
     }
 

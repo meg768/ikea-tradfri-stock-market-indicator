@@ -1,7 +1,6 @@
 var Indicator  = require('./indicator.js');
 var yahoo      = require('yahoo-finance');
 var sprintf    = require('yow/sprintf');
-var isDate     = require('yow/is').isDate;
 
 module.exports = class StockMarketIndicator extends Indicator {
 
