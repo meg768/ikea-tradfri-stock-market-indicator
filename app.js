@@ -10,8 +10,8 @@ module.exports = class App {
         require('dotenv').config();
 
         this.configFile = Path.join(Path.dirname(__filename), 'config.json');
-        this.gateway = new Gateway(this.log);
         this.config = JSON.parse(fs.readFileSync(this.configFile));
+        this.gateway = new Gateway({log:this.log});
         this.indicators = [];
 
         if (this.config == undefined) {

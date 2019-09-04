@@ -4,7 +4,9 @@ var Color = require('color');
 
 module.exports = class Gateway {
 
-    constructor(log) {
+    constructor(args) {
+
+        var {log} = args;
 
         this.gateway = null;
         this.log = log;
