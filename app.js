@@ -9,22 +9,19 @@ module.exports = class App {
     constructor() {
         require('dotenv').config();
 
-        this.configFile = Path.join(Path.dirname(__filename), 'config.json');
-        this.config = JSON.parse(fs.readFileSync(this.configFile));
+        var configFile = Path.join(Path.dirname(__filename), 'config.json');
+        var config = JSON.parse(fs.readFileSync(configFile));
 
-        if (!this.config) {
+        if (!config) {
             throw new Error('No configuration file!');
         }
 
-        console.log('DEBUG MODE', this.config.debug);
+        this.indicators = [];
+        this.configFile = configFile;
+        this.config = config;
 
         this.gateway = new Gateway({log:this.log});
 
-        if (!this.gateway) {
-            throw new Error('Could not create gateway!');
-
-        }
-        this.indicators = [];
 
 
     }
