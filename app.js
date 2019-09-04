@@ -29,7 +29,7 @@ module.exports = class App {
             .then(() => {
 
                 this.config.indicators.forEach((config) => {
-                    this.indicators.push(new StockMarketIndicator(this.log, this.gateway, config));
+                    this.indicators.push(new StockMarketIndicator({log:this.log, gateway:this.gateway, config:config}));
                 });
 
                 var promise = Promise.resolve();

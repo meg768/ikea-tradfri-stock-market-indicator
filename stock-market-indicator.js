@@ -4,8 +4,8 @@ var sprintf    = require('yow/sprintf');
 
 module.exports = class StockMarketIndicator extends Indicator {
 
-    constructor(log, gateway, config) {
-        super(log, gateway, config);
+    constructor(args) {
+        super(args);
 
         this.lastQuote = undefined;
     }

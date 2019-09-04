@@ -2,10 +2,11 @@
 
 module.exports = class Indicator {
 
-    constructor(log, gateway, config) {
+    constructor(args) {
+        var {log, gateway, config} = args;
         this.gateway = gateway;
-        this.config = config;
-        this.log = log;
+        this.config  = config;
+        this.log     = log;
 
     }
 
