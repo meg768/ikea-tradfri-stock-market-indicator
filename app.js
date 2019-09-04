@@ -20,7 +20,7 @@ module.exports = class App {
         this.configFile = configFile;
         this.config = config;
 
-        this.log = () => {
+        this.xxlog = () => {
             console.log('*************', JSON.stringify(this));
             if (this.config.debug)
                 console.log.apply(this, arguments);
@@ -33,7 +33,7 @@ module.exports = class App {
 
     }
 
-    xxxlog() {
+    log() {
         console.log('*************', JSON.stringify(this));
         if (this.config.debug)
             console.log.apply(this, arguments);
