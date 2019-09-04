@@ -11,12 +11,14 @@ module.exports = class App {
 
         this.configFile = Path.join(Path.dirname(__filename), 'config.json');
         this.config = JSON.parse(fs.readFileSync(this.configFile));
-        this.gateway = new Gateway({log:this.log});
-        this.indicators = [];
 
         if (this.config == undefined) {
             throw new Error('No configuration file!');
         }
+
+        this.gateway = new Gateway({log:this.log});
+        this.indicators = [];
+
 
     }
 
