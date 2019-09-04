@@ -1,9 +1,9 @@
 {
     "debug": true,
 	"indicators": [
-        {"symbol": "^OMX", "lightbulb": "Bollen A", "fetchInterval": 5, "updateInterval": 5},
-        {"symbol": "^SPGSGC", "lightbulb": "Bollen B", "fetchInterval": 5, "updateInterval": 5},    
-        {"symbol": "^SPGSBR", "lightbulb": "Bollen C", "fetchInterval": 5, "updateInterval": 5}
+        {"symbol": "^OMX", "lightbulb": "Bollen A", "fetchInterval": 5, "updateInterval": 0.2},
+        {"symbol": "^SPGSGC", "lightbulb": "Bollen B", "fetchInterval": 5, "updateInterval": 0.2},    
+        {"symbol": "^SPGSBR", "lightbulb": "Bollen C", "fetchInterval": 5, "updateInterval": 0.2}
     ]
 }
 
