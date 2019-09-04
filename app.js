@@ -1,7 +1,7 @@
 
-var Gateway    = require('./gateway.js');
-var fs         = require('fs');
-var Path       = require('path');
+var Gateway = require('./gateway.js');
+var fs = require('fs');
+var Path = require('path');
 var StockMarketIndicator = require('./stock-market-indicator.js');
 
 module.exports = class App {
