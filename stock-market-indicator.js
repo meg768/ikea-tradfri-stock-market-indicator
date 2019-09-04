@@ -60,7 +60,6 @@ module.exports = class StockMarketIndicator extends Indicator {
         }
 
         var white      = {red:255, green:204, blue:159};
-        var yellow     = {red:255, green:255, blue:0};
         var red        = {red:50, green:0, blue:0};
         var green      = {red:0, green:255, blue:0};
         var factor     = Math.min(1, Math.abs(quote.change));
@@ -126,10 +125,17 @@ module.exports = class StockMarketIndicator extends Indicator {
                     }
 
                     if (true) {
+                        color = {};
                         color.hue        = quote.change > 0 ? 120 : 0;
                         color.saturation = 100;
                         color.luminance  = 100 - (Math.min(1, Math.abs(quote.change)) * 100) / 2;
 
+                        if (this.lastQuote && quote.time) {
+                            if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
+                                color = {hue:120, saturation:100, luminance:10};
+                            }
+                        }
+    
                     }
             
                     this.lastQuote = quote;
