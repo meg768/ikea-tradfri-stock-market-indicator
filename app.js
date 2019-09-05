@@ -2,6 +2,7 @@
 var Gateway = require('./gateway.js');
 var fs = require('fs');
 var Path = require('path');
+var sprintf = require('yow/sprintf');
 var StockMarketIndicator = require('./stock-market-indicator.js');
 
 module.exports = class App {
@@ -24,7 +25,11 @@ module.exports = class App {
     }
 
     log() {
-        console.log.apply(this, arguments);
+        var date = new Date();
+        var prefix = sprintf('%04d-%02d-%02d %02d:%02d.%02d:', date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
+        var args = [prefix].concat(Array.prototype.slice.call(arguments));
+
+        console.log.apply(this, args);
     }
 
     run() {
