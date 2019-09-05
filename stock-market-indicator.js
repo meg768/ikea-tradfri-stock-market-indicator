@@ -39,7 +39,7 @@ module.exports = class StockMarketIndicator extends Indicator {
                 })
                 .catch((error) => {
                     this.log(sprintf('Could not get general information about symbol %s. %s', symbol, error.message));
-                    resolve({});
+                    reject(error);
                 });
     
             }
@@ -107,7 +107,7 @@ module.exports = class StockMarketIndicator extends Indicator {
                     resolve();
                 })
                 .catch((error) => {
-                    reject(error);
+                    resolve();
                 })
     
             }
