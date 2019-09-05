@@ -12,6 +12,9 @@ module.exports = class StockMarketIndicator extends Indicator {
 
 
     fetch(symbol) {
+
+        var then = new Date();
+
 		return new Promise((resolve, reject) => {
             try {
                 var options = {};
@@ -20,6 +23,9 @@ module.exports = class StockMarketIndicator extends Indicator {
                 options.modules = ['price', 'summaryProfile', 'summaryDetail'];
   
                 yahoo.quote(options).then((data) => {
+                    var now = new Date();
+                    var time = Math.floor(now.valueOf() - then.valueOf());
+
                     var quote = {};
                     quote.symbol = symbol;
                     quote.name = data.price.longName ? data.price.longName : data.price.shortName;
@@ -33,6 +39,8 @@ module.exports = class StockMarketIndicator extends Indicator {
 
                     // Fix some stuff
                     quote.name = quote.name.replace(/&amp;/g, '&');
+
+                    this.log(sprintf('Fetched quote from Yahoo for symbol %s (%s%.2f%%). Took %d ms.', quote.symbol, quote.change >= 0 ? '+' : '-', parseFloat(Math.abs(quote.change)), time));
     
                     resolve(quote);
     
@@ -71,12 +79,10 @@ module.exports = class StockMarketIndicator extends Indicator {
 
                 this.fetch(this.config.symbol).then((quote) => {
 
-                    this.log(sprintf('Fetched quote from Yahoo for symbol %s (%s%.2f%%).', quote.symbol, quote.change >= 0 ? '+' : '-', parseFloat(quote.change)));
-    
                     var color = this.computeColor(quote);
 
                     // Set to blue when market closed...
-                    if (true) {
+                    if (false) {
                         if (this.lastQuote && quote.time) {
                             if (this.lastQuote.time.valueOf() == quote.time.valueOf()) {
                                 color = {red:0, green:0, blue:5};
