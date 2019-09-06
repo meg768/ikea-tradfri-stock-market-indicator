@@ -59,10 +59,12 @@ module.exports = class StockMarketIndicator extends Indicator {
 
     computeColor(quote) {
         var change     = Math.max(-1, Math.min(1, quote.change));
-        var hue        = change >= 0 ? 120 : 0;
+        var hue        = change >= 0 ? 240 : 0;
         var saturation = 100;
         var luminance  = 0 + (Math.abs(change) * 50);
 
+        luminance = 100;
+        saturation = 50 + (Math.abs(change) * 50);
 
         return {hue:hue, saturation:saturation, luminance:luminance}
     }
